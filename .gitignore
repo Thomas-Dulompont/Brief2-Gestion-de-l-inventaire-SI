@@ -12,6 +12,7 @@ __pycache__/
 
 #BDD
 BDD/bdd.db
+BDD/.DS_Store
 
 # Distribution / packaging
 .Python
