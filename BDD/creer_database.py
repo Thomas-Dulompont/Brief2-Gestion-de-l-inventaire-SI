@@ -1,11 +1,11 @@
 import sqlite3
 
-connexion = sqlite3.connect("bdd.db")
+connexion = sqlite3.connect("./BDD/bdd.db")
 curseur = connexion.cursor()
 
 curseur.execute('''CREATE TABLE user
                 (
-                    id TEXT PRIMARY KEY,
+                    id INTEGER PRIMARY KEY,
                     role INTERGER,
                     nom TEXT,
                     prenom TEXT,
@@ -26,7 +26,7 @@ curseur.execute('''CREATE TABLE type_ordi
 
 curseur.execute('''CREATE TABLE carnet_pret
                 (
-                    reference_pc TEXT PRIMARY KEY,
+                    reference_pc INTEGER PRIMARY KEY,
                     id_user INTEGER,
                     id_pc INTEGER,
                     FOREIGN KEY (id_user)
