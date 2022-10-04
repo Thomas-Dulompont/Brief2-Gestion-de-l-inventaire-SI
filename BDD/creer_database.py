@@ -1,6 +1,6 @@
 import sqlite3
 
-connexion = sqlite3.connect("bdd.db")
+connexion = sqlite3.connect("./BDD/bdd.db")
 curseur = connexion.cursor()
 
 curseur.execute('''CREATE TABLE user
