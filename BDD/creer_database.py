@@ -67,3 +67,4 @@ curseur.execute('''CREATE TABLE chat_tickets
 ''')
 
 connexion.commit()
+connexion.close()
