@@ -12,7 +12,11 @@ def creer_user():
     crud.create_user (False, nom, prenom, mdp)
 
 def creer_admin():
+<<<<<<< HEAD
     nom = input ("Entrez votre nom : ")
+=======
+    nom = input ("Entrez votre nom admin : ")
+>>>>>>> ERIC
     prenom = input ("Entrez votre prenom : ")
     mdp = input ("Entrez votre mot de passe  : ")
 
@@ -25,7 +29,11 @@ def creer_ordi():
     ram = input ("Entrez votre ram : ")
     disque = input ("Entrez votre disque: ")
 
+<<<<<<< HEAD
     crud.type_ordi (marque, processeur, carte_graphique, ram, disque)
+=======
+    crud.create_type_ordi (marque, processeur, carte_graphique, ram, disque)
+>>>>>>> ERIC
 
 def ticket ():
     date = input ("Entrez la date : ")
@@ -33,7 +41,11 @@ def ticket ():
     status = input ("Entrez le status : ")
     message = input ("Entrez le message : ")
 
+<<<<<<< HEAD
     crud.ticket (date, id_ref_pret, status, message)
+=======
+    crud.create_ticket (date, id_ref_pret, status, message)
+>>>>>>> ERIC
 
 def chat_ticket ():
     date = input ("Entrez la date : ")
@@ -41,14 +53,25 @@ def chat_ticket ():
     auteur = input ("Entrez l'auteur : ")
     message = input ("Entrez le message : ")
 
+<<<<<<< HEAD
     crud.ticket (date, id_ticket, auteur, message)
+=======
+    crud.create_chat_tickets (date, id_ticket, auteur, message)
+>>>>>>> ERIC
 
 def carnet_pret ():
     reference_pc = input ("Entrez la reference du pc : ")
     id_user = input ("Entrez l'identite de l'user : ") 
     id_pc = input ("Entrez l'identite du pc : ")
 
+<<<<<<< HEAD
     crud.carnet_pret (reference_pc, id_user, id_pc)
 
 
     
+=======
+    crud.create_carnet_pret (reference_pc, id_user, id_pc)
+
+
+    
+>>>>>>> ERIC
