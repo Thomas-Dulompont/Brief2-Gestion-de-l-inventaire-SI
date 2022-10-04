@@ -53,6 +53,7 @@ curseur.execute('''CREATE TABLE ticket
 
 curseur.execute('''CREATE TABLE chat_tickets
                 (
+                    id_message INTEGER PRIMARY KEY,
                     date INTEGER,
                     id_ticket INTEGER,
                     auteur TEXT,
