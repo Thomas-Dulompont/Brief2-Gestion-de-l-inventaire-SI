@@ -1,5 +1,4 @@
 import functions
-import crud
 
 #functions.creer_admin()
 #functions.creer_ordi()
@@ -8,6 +7,5 @@ import crud
 #functions.carnet_pret()
 #functions.info_user()
 #functions.info_user()
-
 
 functions.home_page()

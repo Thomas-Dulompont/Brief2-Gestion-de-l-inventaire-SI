@@ -2,6 +2,7 @@ import os
 from datetime import date
 import time
 import crud
+import hashlib
 
 def clear():
     os.system('clear')
@@ -50,6 +51,9 @@ def info_user(id):
     
 
 def register():
+    """
+    Fonction qui permet à l'utilisateur de créer un compte
+    """
     nom = input ("Entrez votre nom : ")
     prenom = input ("Entrez votre prenom : ")
     mail = input("Entrez votre email : ")
@@ -59,7 +63,7 @@ def register():
     clear()
     print(""" 
     
-    Inscription validée !
+    Inscription Validée !
     Redirection vers la page de connection...
     """)
     time.sleep(2)
@@ -67,19 +71,30 @@ def register():
     home_page()
 
 def login():
+    """
+    Fonction qui demande à l'utilisateur son email & mot de passe et qui vérifie si la base contient l'email indiqué avec le mot de passe, elle compte également le nombre d'essais avant de renvoyer à l'accueil
+    """
+
     essais = 0
     while True:
         mail = input("Entrez votre email : ")
         mdp = input ("Entrez votre mot de passe  : ")
+
+        hash_mdp = hashlib.sha256(mdp.encode()).hexdigest()
         if essais > 5:
             print("Compte bloqué")
-        elif crud.get_user(mail)[0] == mdp:
+            home_page()
+        elif crud.verify_user(mail)[0] == hash_mdp:
             print("connection réussis")
+            break
         else:
             print("Mauvaise combinaison Mot de Passe / Mail")
             essais += 1
 
 def home_page():
+    """
+    Fonction qui demande à l'utilisateur si il souhaite se connecter / s'inscrire
+    """
     clear()
     print("""
     Connexion / Inscription
