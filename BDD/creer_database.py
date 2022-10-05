@@ -9,6 +9,7 @@ curseur.execute('''CREATE TABLE user
                     role INTERGER,
                     nom TEXT,
                     prenom TEXT,
+                    mail TEXT,
                     mot_de_passe TEXT
                 )
 ''')

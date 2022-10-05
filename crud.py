@@ -1,13 +1,13 @@
 import sqlite3
 
 # fonction qui ajoute un utilisateur
-def create_user(is_admin, nom, prenom, mdp):
+def create_user(is_admin, nom, prenom, mail, mdp):
     connexion = sqlite3.connect("./BDD/bdd.db")
     curseur = connexion.cursor()
     if is_admin:
-        curseur.execute("INSERT INTO user VALUES(?, ?, ?, ?, ?)", (None, 1, nom, prenom, mdp))
+        curseur.execute("INSERT INTO user VALUES(?, ?, ?, ?, ?, ?)", (None, 1, nom, prenom, mail, mdp))
     else:
-        curseur.execute("INSERT INTO user VALUES(?, ?, ?, ?, ?)", (None, 0, nom, prenom, mdp))
+        curseur.execute("INSERT INTO user VALUES(?, ?, ?, ?, ?, ?)", (None, 0, nom, prenom, mail, mdp))
     connexion.commit()
 
 # fonction qui supprime un utilisateur
@@ -65,3 +65,11 @@ def delete_carnet_pret(reference_pc):
     
     curseur.execute("DELETE FROM carnet_pret WHERE reference_pc = ?", (reference_pc,))
     connexion.commit()
+
+def get_user(mail):
+    connexion = sqlite3.connect("./BDD/bdd.db")
+    curseur = connexion.cursor()
+
+    curseur.execute("SELECT mot_de_passe FROM user WHERE mail = ?", (mail,))
+    connexion.commit()
+    return curseur.fetchone()

@@ -1,12 +1,10 @@
+import os
 from datetime import date
+import time
 import crud
 
-def creer_user():
-    nom = input ("Entrez votre nom : ")
-    prenom = input ("Entrez votre prenom : ")
-    mdp = input ("Entrez votre mot de passe  : ")
-
-    crud.create_user (False, nom, prenom, mdp)
+def clear():
+    os.system('clear')
 
 def creer_admin():
     nom = input ("Entrez votre nom admin : ")
@@ -47,5 +45,57 @@ def carnet_pret ():
 
     crud.create_carnet_pret (reference_pc, id_user, id_pc)
 
-
+def info_user(id):
+    return crud.get_info_user(id)
     
+
+def register():
+    nom = input ("Entrez votre nom : ")
+    prenom = input ("Entrez votre prenom : ")
+    mail = input("Entrez votre email : ")
+    mdp = input ("Entrez votre mot de passe  : ")
+
+    crud.create_user(False, nom, prenom, mail, mdp)
+    clear()
+    print(""" 
+    
+    Inscription validée !
+    Redirection vers la page de connection...
+    """)
+    time.sleep(2)
+    
+    home_page()
+
+def login():
+    essais = 0
+    while True:
+        mail = input("Entrez votre email : ")
+        mdp = input ("Entrez votre mot de passe  : ")
+        if essais > 5:
+            print("Compte bloqué")
+        elif crud.get_user(mail)[0] == mdp:
+            print("connection réussis")
+        else:
+            print("Mauvaise combinaison Mot de Passe / Mail")
+            essais += 1
+
+def home_page():
+    clear()
+    print("""
+    Connexion / Inscription
+
+Vous souhaitez:
+  1 - Connexion
+  2 - Inscription
+
+    """)
+    question_login = input("Entrez votre selection : ")
+
+    if question_login[0].lower() == "1":
+        clear()
+        login()
+    elif question_login[0].lower() == "2":
+        clear()
+        register()
+    else:
+        print(" Merci de selectionner entre Connexion & Inscription ! ")
