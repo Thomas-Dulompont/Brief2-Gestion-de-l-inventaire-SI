@@ -78,11 +78,14 @@ def delete_carnet_pret(reference_pc):
     connexion.commit()
     connexion.close()
 
-def verify_user(mail):
+def verify_user(mail, mdp):
     connexion = sqlite3.connect("./BDD/bdd.db")
     curseur = connexion.cursor()
 
-    curseur.execute("SELECT mot_de_passe FROM user WHERE mail = ?", (mail,))
-    mdp_chiffre = curseur.fetchone()
+    # Hachage du mdp entré par l'utilisateur
+    mdp = hashlib.sha256(mdp.encode()).hexdigest()
+
+    curseur.execute("SELECT mot_de_passe FROM user WHERE mail = ? and mot_de_passe = ?", (mail, mdp))
+    reponse = curseur.fetchone()
     connexion.close()
-    return mdp_chiffre
+    return reponse

@@ -1,8 +1,8 @@
 import os
 from datetime import date
 import time
+from turtle import home
 import crud
-import hashlib
 
 def clear():
     os.system('clear')
@@ -61,13 +61,14 @@ def register():
 
     crud.create_user(False, nom, prenom, mail, mdp)
     clear()
-    print(""" 
-    
-    Inscription Validée !
-    Redirection vers la page de connection...
-    """)
+    print("""
+
+\033[1;32m Inscription validée ! \n
+
+\033[0m Redirection vers la page d'accueil en cours ... \n
+
+""")
     time.sleep(2)
-    
     home_page()
 
 def login():
@@ -80,16 +81,29 @@ def login():
         mail = input("Entrez votre email : ")
         mdp = input ("Entrez votre mot de passe  : ")
 
-        hash_mdp = hashlib.sha256(mdp.encode()).hexdigest()
-        if essais > 5:
-            print("Compte bloqué")
-            home_page()
-        elif crud.verify_user(mail)[0] == hash_mdp:
-            print("connection réussis")
-            break
+        user_infos = crud.verify_user(mail, mdp)
+
+        if user_infos != None:
+            print("""
+
+\033[1;32m Authentification réussit ! \n
+
+\033[0m Redirection vers votre espace en cours ...\n
+
+""")
+            time.sleep(2)
+            return user_infos
         else:
-            print("Mauvaise combinaison Mot de Passe / Mail")
-            essais += 1
+            print("""
+
+\033[1;31m Adresse email ou mot de passe incorrect ! \n
+
+\033[0m Redirection vers la page d'accueil en cours ... \n
+
+""")
+            time.sleep(2)
+            home_page()
+            
 
 def home_page():
     """
@@ -99,9 +113,8 @@ def home_page():
     print("""
     Connexion / Inscription
 
-Vous souhaitez:
-  1 - Connexion
-  2 - Inscription
+1 - Connexion
+2 - Inscription
 
     """)
     question_login = input("Entrez votre selection : ")
