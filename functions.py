@@ -46,10 +46,6 @@ def carnet_pret ():
 
     crud.create_carnet_pret (reference_pc, id_user, id_pc)
 
-def info_user(id):
-    return crud.get_info_user(id)
-    
-
 def register():
     """
     Fonction qui permet à l'utilisateur de créer un compte
