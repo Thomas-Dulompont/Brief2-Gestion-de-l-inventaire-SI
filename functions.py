@@ -69,7 +69,6 @@ def register():
 
 """)
     time.sleep(2)
-    home_page()
 
 def login():
     """
@@ -102,28 +101,4 @@ def login():
 
 """)
             time.sleep(2)
-            home_page()
-            
-
-def home_page():
-    """
-    Fonction qui demande à l'utilisateur si il souhaite se connecter / s'inscrire
-    """
-    clear()
-    print("""
-    Connexion / Inscription
-
-1 - Connexion
-2 - Inscription
-
-    """)
-    question_login = input("Entrez votre selection : ")
-
-    if question_login[0].lower() == "1":
-        clear()
-        login()
-    elif question_login[0].lower() == "2":
-        clear()
-        register()
-    else:
-        print(" Merci de selectionner entre Connexion & Inscription ! ")
+            return False
