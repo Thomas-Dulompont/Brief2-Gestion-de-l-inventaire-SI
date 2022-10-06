@@ -46,6 +46,7 @@ curseur.execute('''CREATE TABLE ticket
                     id_ref_pret TEXT,
                     status INTEGER,
                     message TEXT,
+                    auteur TEXT,
                     FOREIGN KEY (id_ref_pret)
                         REFERENCES carnet_pret(reference_pc)
                         ON DELETE CASCADE

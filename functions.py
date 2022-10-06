@@ -4,6 +4,8 @@ import time
 from turtle import home
 import crud
 
+today = date.today()
+
 def clear():
     os.system('clear')
 
@@ -23,13 +25,86 @@ def creer_ordi():
 
     crud.create_type_ordi (marque, processeur, carte_graphique, ram, disque)
 
-def ticket ():
-    date = input ("Entrez la date : ")
-    id_ref_pret = input ("Entrez la reference du pret : ")
-    status = input ("Entrez le status : ")
-    message = input ("Entrez le message : ")
+###                                     ###
+###     FONCTIONS LIEES AUX TICKETS     ###
+###                                     ###
 
-    crud.create_ticket (date, id_ref_pret, status, message)
+def create_ticket(user_infos):
+    """
+    Fonction qui demande à l'utilisateur de rentrer un ID de PC et un message, et qui fait appel a crud pour créer une nouvelle Ligne dans la DB
+    : return (Str) : Retourne un print
+    """
+    clear()
+    date = today.strftime("%d/%m/%Y")
+    id_ref_pc = input ("Entrez l'ID de l'ordinateur : ")
+    message = input ("Décrivez votre problème : ")
+    auteur = user_infos[2] + "_" + user_infos[3]
+
+    crud.create_ticket(date, id_ref_pc, message, auteur)
+    print("""
+
+Le Ticket a été créé !
+
+    """)
+    time.sleep(2)
+
+def delete_ticket(id):
+    """
+    Fonction qui supprime le ticket en fonction de l'ID demandé, vérifie si le ticket existe
+    : param : id (Int) : ID du ticket
+    : return (Str) : Retourne un print
+    """
+    if crud.get_ticket(id) == None:
+        print("L'ID du ticket entré est inéxistant ! ")
+        return
+    else:
+        crud.delete_ticket(id)
+
+    print("Le ticket a été supprimé ! ")
+
+def afficher_liste_tickets():
+    """
+    Fonction qui affiche la liste des tickets
+    """
+    grille = []
+    for ligne in get_ticket_all():
+        ticket = []
+        for element in ligne:
+            ticket.append(element)
+
+        if "Clos" in ticket:
+            pass
+        else:
+            grille.append(ticket)
+            
+    
+    for grid in grille:
+        grid.remove(grid[len(grid) -1])
+        print(grid)
+
+
+def afficher_liste_tickets_user_open(user_infos):
+    """
+    Fonction qui affiche la liste des tickets de l'utilisateur qui sont encore ouverts
+    """
+    grille = []
+    for ligne in get_ticket_user(user_infos):
+        ticket = []
+        for element in ligne:
+            ticket.append(element)
+
+        if "Clos" in ticket:
+            pass
+        else:
+            grille.append(ticket)
+            
+    
+    for grid in grille:
+        grid.remove(grid[len(grid) -1])
+        print(grid)
+
+
+
 
 def chat_ticket ():
     date = input ("Entrez la date : ")
@@ -39,12 +114,11 @@ def chat_ticket ():
 
     crud.create_chat_tickets (date, id_ticket, auteur, message)
 
-def carnet_pret ():
-    reference_pc = input ("Entrez la reference du pc : ")
-    id_user = input ("Entrez l'identite de l'user : ") 
-    id_pc = input ("Entrez l'identite du pc : ")
-
-    crud.create_carnet_pret (reference_pc, id_user, id_pc)
+def get_ticket_all():
+    return crud.get_ticket_all()
+    
+def get_ticket_user(user_infos):
+    return crud.get_ticket_user(user_infos)
 
 def register():
     """
@@ -87,7 +161,7 @@ def login():
 
 """)
             time.sleep(2)
-            return user_infos
+            return crud.get_info_user()
         else:
             print("""
 
