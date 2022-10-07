@@ -1,10 +1,12 @@
 import os
-from datetime import date
+from datetime import date, datetime
 import time
 from turtle import home
 import crud
 
 today = date.today()
+now = datetime.now()
+global_status_close = "Cloturé"
 
 def clear():
     os.system('clear')
@@ -13,8 +15,9 @@ def creer_admin():
     nom = input ("Entrez votre nom admin : ")
     prenom = input ("Entrez votre prenom : ")
     mdp = input ("Entrez votre mot de passe  : ")
+    mail = input ("Entrez votre email  : ")
 
-    crud.create_user (True, nom, prenom, mdp) 
+    crud.create_user (True, nom, prenom, mail, mdp) 
 
 def creer_ordi():
     marque = input ("Entrez votre marque : ")
@@ -43,7 +46,7 @@ def create_ticket(user_infos):
     crud.create_ticket(date, id_ref_pc, message, auteur)
     print("""
 
-Le Ticket a été créé !
+ Le Ticket a été créé !
 
     """)
     time.sleep(2)
@@ -62,9 +65,18 @@ def delete_ticket(id):
 
     print("Le ticket a été supprimé ! ")
 
+def change_status_ticket(id, status):
+    """
+    Fonction qui change le status du ticket entré
+    : param id (Int) : ID du ticket
+    : param status (Str) : Le nouveau Status
+    """
+    crud.change_status_ticket(id, status)
+
 def afficher_liste_tickets():
     """
     Fonction qui affiche la liste des tickets
+    : return grille (Tuple) : Retourne la grille
     """
     grille = []
     for ligne in get_ticket_all():
@@ -72,20 +84,17 @@ def afficher_liste_tickets():
         for element in ligne:
             ticket.append(element)
 
-        if "Clos" in ticket:
+        if global_status_close in ticket:
             pass
         else:
             grille.append(ticket)
-            
-    
-    for grid in grille:
-        grid.remove(grid[len(grid) -1])
-        print(grid)
+    return grille
 
 
 def afficher_liste_tickets_user_open(user_infos):
     """
     Fonction qui affiche la liste des tickets de l'utilisateur qui sont encore ouverts
+    : param user_infos (Tuple) : Les informations de l'utilisateur
     """
     grille = []
     for ligne in get_ticket_user(user_infos):
@@ -93,32 +102,71 @@ def afficher_liste_tickets_user_open(user_infos):
         for element in ligne:
             ticket.append(element)
 
-        if "Clos" in ticket:
+        if global_status_close in ticket:
             pass
         else:
             grille.append(ticket)
             
-    
+    print("ID      DATE        PC     STATUS")
     for grid in grille:
+        grid.remove(grid[len(grid) -1])
         grid.remove(grid[len(grid) -1])
         print(grid)
 
+def afficher_liste_tickets_admin_open():
+    """
+    Fonction qui affiche la liste de tous les tickets ouverts
+    """
+    tickets = get_ticket_all()
+    grille = []
+    for ligne in get_ticket_all():
+        ticket = []
+        for element in ligne:
+            ticket.append(element)
+        if global_status_close in ticket:
+            pass
+        else:
+            grille.append(ticket)
+    
+    print("ID     DATE      PC     STATUS     AUTEUR")
+    for grid in grille:
+        grid.remove(grid[len(grid) -2])
+        for element in grid:
+            print(str(element), end=" | ")
+        print("\n")
+
+def afficher_liste_messages_chat(id):
+    messages = crud.get_messages_chat_ticket(id)
+    if messages != None:
+        for message in messages:
+            print("""
+\033[1;36m{} - {} :
+\033[0m{}
+""".format(message[3], message[1], message[4]))
+            print("-----")
+    else:
+        print("Aucun message pour le moment...")
+
+def get_message_chat_ticket(id):
+    messages = crud.get_message_chat_ticket(id)
+    return messages
 
 
+def create_message_chat_ticket (id_ticket, auteur):
+    date = now.strftime("%d/%m/%Y %H:%M:%S")
+    message = input ("Entrez votre message : ")
 
-def chat_ticket ():
-    date = input ("Entrez la date : ")
-    id_ticket = input ("Entrez la reference du ticket : ")
-    auteur = input ("Entrez l'auteur : ")
-    message = input ("Entrez le message : ")
-
-    crud.create_chat_tickets (date, id_ticket, auteur, message)
+    crud.create_message_chat_tickets(date, id_ticket, auteur, message)
 
 def get_ticket_all():
     return crud.get_ticket_all()
     
 def get_ticket_user(user_infos):
     return crud.get_ticket_user(user_infos)
+
+def get_single_ticket(id):
+    ticket = crud.get_single_ticket(id)
+    return ticket
 
 def register():
     """
@@ -127,7 +175,7 @@ def register():
     nom = input ("Entrez votre nom : ")
     prenom = input ("Entrez votre prenom : ")
     mail = input("Entrez votre email : ")
-    mdp = input ("Entrez votre mot de passe  : ")
+    mdp = input ("Entrez votre mot de passe : ")
 
     crud.create_user(False, nom, prenom, mail, mdp)
     clear()
@@ -148,7 +196,7 @@ def login():
     essais = 0
     while True:
         mail = input("Entrez votre email : ")
-        mdp = input ("Entrez votre mot de passe  : ")
+        mdp = input ("Entrez votre mot de passe : ")
 
         user_infos = crud.verify_user(mail, mdp)
 
@@ -161,7 +209,7 @@ def login():
 
 """)
             time.sleep(2)
-            return crud.get_info_user()
+            return crud.get_info_user(mail)
         else:
             print("""
 
@@ -172,3 +220,10 @@ def login():
 """)
             time.sleep(2)
             return False
+
+def check_admin(user_infos):
+    is_admin = crud.check_admin(user_infos)
+    if is_admin[0] == 1:
+        return True
+    else:
+        return False

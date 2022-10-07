@@ -43,6 +43,14 @@ def delete_ticket(id):
     connexion.commit()
     connexion.close()
 
+def change_status_ticket(id, status):
+    connexion = sqlite3.connect("./BDD/bdd.db")
+    curseur = connexion.cursor()
+
+    curseur.execute("UPDATE ticket SET status = ? WHERE id = ?", (status,id,))
+    connexion.commit()
+    connexion.close()
+
 def get_ticket(id):
     connexion = sqlite3.connect("./BDD/bdd.db")
     curseur = connexion.cursor()
@@ -75,6 +83,16 @@ def get_ticket_user(infos_user):
     connexion.close()
     return tickets
 
+def get_single_ticket(id):
+    connexion = sqlite3.connect("./BDD/bdd.db")
+    curseur = connexion.cursor()
+
+    curseur.execute("SELECT * FROM ticket WHERE id = ?", (id,))
+    ticket = curseur.fetchone()
+    connexion.commit()
+    connexion.close()
+    return ticket
+
 # fonction qui ajoute un ordinateur
 def create_type_ordi(marque, processeur, carte_graphique, ram, disque):
     connexion = sqlite3.connect("./BDD/bdd.db")
@@ -94,7 +112,7 @@ def delete_type_ordi(id):
     connexion.close()
 
 # fonction qui ajoute un chat_tickets
-def create_chat_tickets(date, id_ticket, auteur, message):
+def create_message_chat_tickets(date, id_ticket, auteur, message):
     connexion = sqlite3.connect("./BDD/bdd.db")
     curseur = connexion.cursor()
     
@@ -102,17 +120,36 @@ def create_chat_tickets(date, id_ticket, auteur, message):
     connexion.commit()
     connexion.close()
 
-def get_info_user():
+def get_messages_chat_ticket(id):
     connexion = sqlite3.connect("./BDD/bdd.db")
     curseur = connexion.cursor()
 
-    curseur.execute("SELECT * FROM user")
+    curseur.execute("SELECT * FROM chat_tickets WHERE id_ticket = ?", (id,))
+    messages = curseur.fetchall()
+    connexion.commit()
+    connexion.close()
+    return messages
+
+def get_info_user(mail):
+    """
+    Fonction qui va chercher dans la DB les informations de l'utilisateur grace à son mail
+    : param mail (Str) : Mail entré par l'utilisateur
+    """
+    connexion = sqlite3.connect("./BDD/bdd.db")
+    curseur = connexion.cursor()
+
+    curseur.execute("SELECT * FROM user WHERE mail = ?", (mail,))
     reponse = curseur.fetchone()
     connexion.commit()
     connexion.close()
     return reponse
 
 def verify_user(mail, mdp):
+    """
+    Fonction qui hash et va chercher dans la base de donnée le mot de passe ainsi que le mail
+    : param mail (Str) : Mail entré par l'utilisateur
+    : param mdp (Str) : Mot de passe entré par l'utilisateur
+    """
     connexion = sqlite3.connect("./BDD/bdd.db")
     curseur = connexion.cursor()
 
@@ -120,6 +157,20 @@ def verify_user(mail, mdp):
     mdp = hashlib.sha256(mdp.encode()).hexdigest()
 
     curseur.execute("SELECT mot_de_passe FROM user WHERE mail = ? and mot_de_passe = ?", (mail, mdp,))
+    reponse = curseur.fetchone()
+    connexion.close()
+    return reponse
+
+def check_admin(user_infos):
+    """
+    Fonction qui va chercher dans la base de donnée le role de l'utilisateur
+    : param user_infos (Tuple) : Les informations de l'utilisateur
+    : return (Int) : Role de l'utilisateur 
+    """
+    connexion = sqlite3.connect("./BDD/bdd.db")
+    curseur = connexion.cursor()
+
+    curseur.execute("SELECT role FROM user WHERE mail = ?", (user_infos[4],))
     reponse = curseur.fetchone()
     connexion.close()
     return reponse
