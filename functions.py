@@ -7,6 +7,7 @@ import crud
 today = date.today()
 now = datetime.now()
 global_status_close = "Cloturé"
+global_status_open = "En cours"
 
 def clear():
     os.system('clear')
@@ -113,6 +114,28 @@ def afficher_liste_tickets_user_open(user_infos):
         grid.remove(grid[len(grid) -1])
         print(grid)
 
+def afficher_liste_tickets_user_close(user_infos):
+    """
+    Fonction qui affiche la liste des tickets de l'utilisateur qui sont cloturés
+    : param user_infos (Tuple) : Les informations de l'utilisateur
+    """
+    grille = []
+    for ligne in get_ticket_user(user_infos):
+        ticket = []
+        for element in ligne:
+            ticket.append(element)
+
+        if global_status_open in ticket:
+            pass
+        else:
+            grille.append(ticket)
+            
+    print("ID      DATE        PC     STATUS")
+    for grid in grille:
+        grid.remove(grid[len(grid) -1])
+        grid.remove(grid[len(grid) -1])
+        print(grid)
+
 def afficher_liste_tickets_admin_open():
     """
     Fonction qui affiche la liste de tous les tickets ouverts
@@ -148,23 +171,47 @@ def afficher_liste_messages_chat(id):
         print("Aucun message pour le moment...")
 
 def get_message_chat_ticket(id):
+    """
+    Fonction qui retourne les messages d'un ticket grace à son ID
+    : param id (Int) : ID du ticket
+    : return (Tuple) : Les messages du ticket
+    """
     messages = crud.get_message_chat_ticket(id)
     return messages
 
 
 def create_message_chat_ticket (id_ticket, auteur):
+    """
+    Fonction qui ajoute un message à un ticket
+    : param id_ticket (Int) : ID du ticket
+    : param auteur (Str) : Auteur du message
+    """
     date = now.strftime("%d/%m/%Y %H:%M:%S")
     message = input ("Entrez votre message : ")
 
     crud.create_message_chat_tickets(date, id_ticket, auteur, message)
 
 def get_ticket_all():
+    """
+    Fonction qui retourne tous les tickets existants
+    : return (Tuple) : Les tickets    
+    """
     return crud.get_ticket_all()
     
 def get_ticket_user(user_infos):
+    """
+    Fonction qui retourne tous les tickets d'un utilisateur
+    : param user_infos (Tuple) : Informations de l'utilisateur
+    : return (Tuple) : Les tickets de l'utilisateur
+    """
     return crud.get_ticket_user(user_infos)
 
 def get_single_ticket(id):
+    """
+    Fonction qui retourne un ticket
+    : param id (Int) : ID du ticket
+    : return (Tuple) : Ticket
+    """
     ticket = crud.get_single_ticket(id)
     return ticket
 
