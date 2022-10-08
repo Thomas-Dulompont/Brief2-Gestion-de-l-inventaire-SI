@@ -70,7 +70,7 @@ curseur.execute('''CREATE TABLE chat_tickets
                 )
 ''')
 
-curseur.execute("INSERT INTO user VALUES(?, ?, ?, ?, ?, ?)", (None, 1, "root", "root", " ", hashlib.sha256("root".encode()).hexdigest(),))
+curseur.execute("INSERT INTO user VALUES(?, ?, ?, ?, ?, ?)", (None, 1, "root", "root", "root", hashlib.sha256("root".encode()).hexdigest(),))
 
 connexion.commit()
 connexion.close()

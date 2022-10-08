@@ -196,7 +196,8 @@ def delete_root():
     connexion = sqlite3.connect("./BDD/bdd.db")
     curseur = connexion.cursor()
 
-    curseur.execute("DELETE FROM user WHERE mail = ?, role = ?,", ("root",1))
+    curseur.execute("DELETE FROM user WHERE mail = ? AND role = ?", ("root", 1,))
+    connexion.commit()
     connexion.close()
 
 def list_admin():

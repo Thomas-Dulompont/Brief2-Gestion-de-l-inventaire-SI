@@ -43,10 +43,12 @@ Pour des raisons de sécurités nous vous invitons à créer un Admin :
                     functions.create_admin()
                     if len(functions.list_admin()) > 1:
                         functions.delete_root()
+                        functions.clear()
                         print("""
 Votre Espace à bien été créé ! 
 Veuillez vous reconnecter avec votre nouvel Admin
                         """)
+                        time.sleep(2)
                         break
             else:
                 break
