@@ -83,7 +83,17 @@ def get_ticket_user(infos_user):
     connexion.close()
     return tickets
 
-def get_single_ticket(id):
+def get_single_ticket(id, auteur):
+    connexion = sqlite3.connect("./BDD/bdd.db")
+    curseur = connexion.cursor()
+
+    curseur.execute("SELECT * FROM ticket WHERE id = ? AND auteur = ?", (id, auteur,))
+    ticket = curseur.fetchone()
+    connexion.commit()
+    connexion.close()
+    return ticket
+
+def get_single_ticket_admin(id):
     connexion = sqlite3.connect("./BDD/bdd.db")
     curseur = connexion.cursor()
 

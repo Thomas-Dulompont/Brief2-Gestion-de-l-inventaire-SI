@@ -12,23 +12,103 @@ global_status_open = "En cours"
 ###                                     ###
 ###         FONCTIONS GLOBALES          ###
 ###                                     ###
+
 def clear():
     os.system('clear')
+
+def register():
+    """
+    Fonction qui permet à l'utilisateur de créer un compte
+    """
+    nom = input ("Entrez votre nom : ")
+    prenom = input ("Entrez votre prenom : ")
+    mail = input("Entrez votre email : ")
+    mdp = input ("Entrez votre mot de passe : ")
+
+    crud.create_user(False, nom, prenom, mail, mdp)
+    clear()
+    print("""
+
+\033[1;32m Inscription validée ! \n
+
+\033[0m Redirection vers la page d'accueil en cours ... \n
+
+""")
+    time.sleep(2)
+
+def login():
+    """
+    Fonction qui demande à l'utilisateur son email & mot de passe et qui vérifie si la base contient l'email indiqué avec le mot de passe, elle compte également le nombre d'essais avant de renvoyer à l'accueil
+    """
+
+    essais = 0
+    while True:
+        mail = input("Entrez votre email : ")
+        mdp = input ("Entrez votre mot de passe : ")
+
+        user_infos = crud.verify_user(mail, mdp)
+
+        if user_infos != None:
+            print("""
+
+\033[1;32m Authentification réussit ! \n
+
+\033[0m Redirection vers votre espace en cours ...\n
+
+""")
+            time.sleep(2)
+            return crud.get_info_user(mail)
+        else:
+            print("""
+
+\033[1;31m Adresse email ou mot de passe incorrect ! \n
+
+\033[0m Redirection vers la page d'accueil en cours ... \n
+
+""")
+            time.sleep(2)
+            return False
 
 ###                                     ###
 ###     FONCTIONS LIEES AUX ADMINS      ###
 ###                                     ###
 
 def check_root(user_infos):
+    """
+    Fonction qui vérifie si les informations de l'utilisateur sont égales a celle du root
+    : param user_infos (Tuple) : Liste des informations utilisateur
+    : return (Bool) : Vrai / Faux si l'user est root
+    """
     if user_infos[4] == "root":
         is_admin = crud.check_root(user_infos)
         if is_admin[0] == 1:
             return True
         else:
             return False
-        
+
+def check_admin(user_infos):
+    """
+    Fonction qui vérifie si l'utilisateur est admin
+    : param user_infos (Tuple) : Liste des informations utilisateur
+    : return (Bool) : Vrai / Faux si l'user est admin
+    """
+    is_admin = crud.check_admin(user_infos)
+    if is_admin[0] == 1:
+        return True
+    else:
+        return False
+
+def list_admin():
+    """
+    Fonction qui retourne la liste des admins
+    : return (Tuple) : Liste des admins
+    """
+    return crud.list_admin()
 
 def create_admin():
+    """
+    Fonction qui créée un Admin
+    """
     nom = input ("Entrez votre nom : ")
     prenom = input ("Entrez votre prenom : ")
     mdp = input ("Entrez votre mot de passe  : ")
@@ -36,14 +116,11 @@ def create_admin():
 
     crud.create_user (True, nom, prenom, mail, mdp) 
 
-def creer_ordi():
-    marque = input ("Entrez votre marque : ")
-    processeur = input ("Entrez votre processeur : ")
-    carte_graphique = input ("Entrez votre carte_graphique : ")
-    ram = input ("Entrez votre ram : ")
-    disque = input ("Entrez votre disque: ")
-
-    crud.create_type_ordi (marque, processeur, carte_graphique, ram, disque)
+def delete_root():
+    """
+    Fonction qui supprime le root
+    """
+    crud.delete_root()
 
 ###                                     ###
 ###     FONCTIONS LIEES AUX TICKETS     ###
@@ -107,15 +184,19 @@ def afficher_liste_tickets():
             grille.append(ticket)
     return grille
 
-
-def afficher_liste_tickets_user_open(user_infos):
+def afficher_liste_tickets_user_open(user_infos, nb_tickets):
     """
     Fonction qui affiche la liste des tickets de l'utilisateur qui sont encore ouverts
     : param user_infos (Tuple) : Les informations de l'utilisateur
     """
     grille = []
-    for ligne in get_ticket_user(user_infos):
+    tickets_user = get_ticket_user(user_infos)
+    for ligne in tickets_user:
         ticket = []
+        if nb_tickets == 0:
+            pass
+        elif len(grille) == nb_tickets:
+            break
         for element in ligne:
             ticket.append(element)
 
@@ -124,11 +205,14 @@ def afficher_liste_tickets_user_open(user_infos):
         else:
             grille.append(ticket)
             
-    print("ID      DATE        PC     STATUS")
-    for grid in grille:
-        grid.remove(grid[len(grid) -1])
-        grid.remove(grid[len(grid) -1])
-        print(grid)
+    if len(grille) == 0:
+        print("Pas de tickets à afficher pour le moment...")
+    else:
+        print("ID      DATE        PC     STATUS")
+        for grid in grille:
+            grid.remove(grid[len(grid) -1])
+            grid.remove(grid[len(grid) -1])
+            print(grid)
 
 def afficher_liste_tickets_user_close(user_infos):
     """
@@ -146,19 +230,26 @@ def afficher_liste_tickets_user_close(user_infos):
         else:
             grille.append(ticket)
             
-    print("ID      DATE        PC     STATUS")
-    for grid in grille:
-        grid.remove(grid[len(grid) -1])
-        grid.remove(grid[len(grid) -1])
-        print(grid)
+    if len(grille) == 0:
+        print("Pas de tickets à afficher pour le moment...")
+    else:
+        print("ID      DATE        PC     STATUS")
+        for grid in grille:
+            grid.remove(grid[len(grid) -1])
+            grid.remove(grid[len(grid) -1])
+            print(grid)
 
-def afficher_liste_tickets_admin_open():
+def afficher_liste_tickets_admin_open(nb_tickets):
     """
     Fonction qui affiche la liste de tous les tickets ouverts
     """
     tickets = get_ticket_all()
     grille = []
     for ligne in get_ticket_all():
+        if nb_tickets == 0:
+            pass
+        elif len(grille) == nb_tickets:
+            break
         ticket = []
         for element in ligne:
             ticket.append(element)
@@ -167,12 +258,13 @@ def afficher_liste_tickets_admin_open():
         else:
             grille.append(ticket)
     
-    print("ID     DATE      PC     STATUS     AUTEUR")
-    for grid in grille:
-        grid.remove(grid[len(grid) -2])
-        for element in grid:
-            print(str(element), end=" | ")
-        print("\n")
+    if len(grille) == 0:
+        print("Pas de tickets à afficher pour le moment...")
+    else:
+        print("ID     DATE      PC     STATUS     AUTEUR")
+        for grid in grille:
+            grid.remove(grid[len(grid) -2])
+            print(grid)
 
 def afficher_liste_messages_chat(id):
     messages = crud.get_messages_chat_ticket(id)
@@ -195,8 +287,7 @@ def get_message_chat_ticket(id):
     messages = crud.get_message_chat_ticket(id)
     return messages
 
-
-def create_message_chat_ticket (id_ticket, auteur):
+def create_message_chat_ticket (id_ticket, auteur, role):
     """
     Fonction qui ajoute un message à un ticket
     : param id_ticket (Int) : ID du ticket
@@ -204,6 +295,8 @@ def create_message_chat_ticket (id_ticket, auteur):
     """
     date = now.strftime("%d/%m/%Y %H:%M:%S")
     message = input ("Entrez votre message : ")
+    if role == 1:
+        auteur = "\033[1;31m⭐︎ " + auteur + "\033[0m"
 
     crud.create_message_chat_tickets(date, id_ticket, auteur, message)
 
@@ -222,77 +315,34 @@ def get_ticket_user(user_infos):
     """
     return crud.get_ticket_user(user_infos)
 
-def get_single_ticket(id):
+def get_single_ticket(id, user_infos):
     """
     Fonction qui retourne un ticket
     : param id (Int) : ID du ticket
     : return (Tuple) : Ticket
     """
-    ticket = crud.get_single_ticket(id)
+    auteur = auteur = user_infos[2] + "_" + user_infos[3]
+    ticket = crud.get_single_ticket(id, auteur)
     return ticket
 
-def register():
+def get_single_ticket_admin(id):
     """
-    Fonction qui permet à l'utilisateur de créer un compte
+    Fonction qui retourne un ticket
+    : param id (Int) : ID du ticket
+    : return (Tuple) : Ticket
     """
-    nom = input ("Entrez votre nom : ")
-    prenom = input ("Entrez votre prenom : ")
-    mail = input("Entrez votre email : ")
-    mdp = input ("Entrez votre mot de passe : ")
+    ticket = crud.get_single_ticket_admin(id)
+    return ticket
 
-    crud.create_user(False, nom, prenom, mail, mdp)
-    clear()
-    print("""
+###                                     ###
+###       FONCTIONS LIEES AUX PC        ###
+###                                     ###
 
-\033[1;32m Inscription validée ! \n
+def creer_ordi():
+    marque = input ("Entrez votre marque : ")
+    processeur = input ("Entrez votre processeur : ")
+    carte_graphique = input ("Entrez votre carte_graphique : ")
+    ram = input ("Entrez votre ram : ")
+    disque = input ("Entrez votre disque: ")
 
-\033[0m Redirection vers la page d'accueil en cours ... \n
-
-""")
-    time.sleep(2)
-
-def login():
-    """
-    Fonction qui demande à l'utilisateur son email & mot de passe et qui vérifie si la base contient l'email indiqué avec le mot de passe, elle compte également le nombre d'essais avant de renvoyer à l'accueil
-    """
-
-    essais = 0
-    while True:
-        mail = input("Entrez votre email : ")
-        mdp = input ("Entrez votre mot de passe : ")
-
-        user_infos = crud.verify_user(mail, mdp)
-
-        if user_infos != None:
-            print("""
-
-\033[1;32m Authentification réussit ! \n
-
-\033[0m Redirection vers votre espace en cours ...\n
-
-""")
-            time.sleep(2)
-            return crud.get_info_user(mail)
-        else:
-            print("""
-
-\033[1;31m Adresse email ou mot de passe incorrect ! \n
-
-\033[0m Redirection vers la page d'accueil en cours ... \n
-
-""")
-            time.sleep(2)
-            return False
-
-def check_admin(user_infos):
-    is_admin = crud.check_admin(user_infos)
-    if is_admin[0] == 1:
-        return True
-    else:
-        return False
-
-def list_admin():
-    return crud.list_admin()
-
-def delete_root():
-    crud.delete_root()
+    crud.create_type_ordi (marque, processeur, carte_graphique, ram, disque)
