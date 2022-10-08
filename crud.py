@@ -174,3 +174,40 @@ def check_admin(user_infos):
     reponse = curseur.fetchone()
     connexion.close()
     return reponse
+
+def check_root(user_infos):
+    """
+    Fonction qui regarde si l'administrateur connecter est l'utilisateur supreme (root)
+    : param user_infos (Tuple) : Les informations de l'admin
+    : return (Tuple) : Retourne le rôle
+    """
+    connexion = sqlite3.connect("./BDD/bdd.db")
+    curseur = connexion.cursor()
+
+    curseur.execute("SELECT role FROM user WHERE mail = ?", (user_infos[4],))
+    reponse = curseur.fetchone()
+    connexion.close()
+    return reponse
+
+def delete_root():
+    """
+    Fonction qui supprime le root
+    """
+    connexion = sqlite3.connect("./BDD/bdd.db")
+    curseur = connexion.cursor()
+
+    curseur.execute("DELETE FROM user WHERE mail = ?, role = ?,", ("root",1))
+    connexion.close()
+
+def list_admin():
+    """
+    Fonction qui liste tous les administrateurs
+    : return (Tuple) : Liste des admins
+    """
+    connexion = sqlite3.connect("./BDD/bdd.db")
+    curseur = connexion.cursor()
+
+    curseur.execute("SELECT * FROM user WHERE role = ?", (1,))
+    reponse = curseur.fetchall()
+    connexion.close()
+    return reponse

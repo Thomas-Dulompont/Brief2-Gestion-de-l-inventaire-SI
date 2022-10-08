@@ -9,11 +9,27 @@ now = datetime.now()
 global_status_close = "Cloturé"
 global_status_open = "En cours"
 
+###                                     ###
+###         FONCTIONS GLOBALES          ###
+###                                     ###
 def clear():
     os.system('clear')
 
-def creer_admin():
-    nom = input ("Entrez votre nom admin : ")
+###                                     ###
+###     FONCTIONS LIEES AUX ADMINS      ###
+###                                     ###
+
+def check_root(user_infos):
+    if user_infos[4] == "root":
+        is_admin = crud.check_root(user_infos)
+        if is_admin[0] == 1:
+            return True
+        else:
+            return False
+        
+
+def create_admin():
+    nom = input ("Entrez votre nom : ")
     prenom = input ("Entrez votre prenom : ")
     mdp = input ("Entrez votre mot de passe  : ")
     mail = input ("Entrez votre email  : ")
@@ -274,3 +290,9 @@ def check_admin(user_infos):
         return True
     else:
         return False
+
+def list_admin():
+    return crud.list_admin()
+
+def delete_root():
+    crud.delete_root()

@@ -30,7 +30,26 @@ while True:
         user_infos = functions.login()
         
         if user_infos != False:
-            break
+            if functions.check_root(user_infos):
+                functions.clear()
+                while True:
+                    print("""
+                \033[1;31m Première connexion root
+
+Pour des raisons de sécurités nous vous invitons à créer un Admin :
+        (L'utilisateur "root" sera supprimé)\033[0m
+                """)
+                    time.sleep(1)
+                    functions.create_admin()
+                    if len(functions.list_admin()) > 1:
+                        functions.delete_root()
+                        print("""
+Votre Espace à bien été créé ! 
+Veuillez vous reconnecter avec votre nouvel Admin
+                        """)
+                        break
+            else:
+                break
     elif question_login[0].lower() == "2":
         functions.clear()
         functions.register()

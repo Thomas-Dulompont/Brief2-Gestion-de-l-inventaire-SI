@@ -1,4 +1,5 @@
 import sqlite3
+import hashlib
 
 connexion = sqlite3.connect("./BDD/bdd.db")
 curseur = connexion.cursor()
@@ -68,6 +69,8 @@ curseur.execute('''CREATE TABLE chat_tickets
                         ON DELETE CASCADE
                 )
 ''')
+
+curseur.execute("INSERT INTO user VALUES(?, ?, ?, ?, ?, ?)", (None, 1, "root", "root", " ", hashlib.sha256("root".encode()).hexdigest(),))
 
 connexion.commit()
 connexion.close()
