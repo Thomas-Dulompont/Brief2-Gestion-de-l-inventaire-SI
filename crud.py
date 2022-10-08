@@ -222,3 +222,13 @@ def list_admin():
     reponse = curseur.fetchall()
     connexion.close()
     return reponse
+
+def get_ordi_all():
+    connexion = sqlite3.connect("./BDD/bdd.db")
+    curseur = connexion.cursor()
+
+    curseur.execute("SELECT * FROM type_ordi")
+    ordis = curseur.fetchall()
+    connexion.commit()
+    connexion.close()
+    return ordis

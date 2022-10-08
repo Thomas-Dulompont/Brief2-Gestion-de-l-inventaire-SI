@@ -338,11 +338,37 @@ def get_single_ticket_admin(id):
 ###       FONCTIONS LIEES AUX PC        ###
 ###                                     ###
 
-def creer_ordi():
-    marque = input ("Entrez votre marque : ")
-    processeur = input ("Entrez votre processeur : ")
-    carte_graphique = input ("Entrez votre carte_graphique : ")
-    ram = input ("Entrez votre ram : ")
-    disque = input ("Entrez votre disque: ")
+def create_ordi():
+    marque = input ("Entrez la marque : ")
+    processeur = input ("Entrez le processeur : ")
+    carte_graphique = input ("Entrez la carte graphique : ")
+    ram = input ("Entrez la ram (en Go) : ")
+    disque = input ("Entrez votre disque (en Go): ")
 
     crud.create_type_ordi (marque, processeur, carte_graphique, ram, disque)
+
+def afficher_liste_ordi():
+    """
+    Fonction qui affiche la liste des PC
+    : return grille (Tuple) : Retourne la grille
+    """
+    grille = []
+    for ligne in get_ordi_all():
+        ordi = []
+        for element in ligne:
+            ordi.append(element)
+        grille.append(ordi)
+
+    if len(grille) == 0:
+        print("Aucun PC à afficher pour le moment...")
+    else:
+        print("ID   MARQUE  PROC   CG   RAM  CAPACITEE")
+        for ordis in grille:
+            print(ordis)
+
+def get_ordi_all():
+    """
+    Fonction qui retourne tous les ordis existants
+    : return (Tuple) : Les tickets    
+    """
+    return crud.get_ordi_all()

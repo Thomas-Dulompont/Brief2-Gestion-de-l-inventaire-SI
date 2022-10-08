@@ -67,6 +67,7 @@ if functions.check_admin(user_infos):
 1 - Afficher tous les tickets
 2 - Gestion Ordinateurs
 3 - Gestion Utilisateurs
+4 - Historique Tickets
         """)
         question_home_admin = input("Entrez votre selection : ")
         
@@ -75,9 +76,8 @@ if functions.check_admin(user_infos):
                 while True:
                     functions.clear()
                     print("""
-    Panel Administrateur
+    Les Tickets Ouverts
                     """)
-                    print("Les 5 derniers tickets ouverts : \n ")
                     functions.afficher_liste_tickets_admin_open(0)
                     print("""
 1 - Voir un ticket
@@ -152,9 +152,36 @@ if functions.check_admin(user_infos):
                         """)
                         time.sleep(2)
             elif question_home_admin == "2":
-                print("2")
+                while True:
+                    functions.clear()
+                    print("""
+    Tous les PC
+                    """)
+                    functions.afficher_liste_ordi()
+                    print("""
+1 - Ajouter un PC
+2 - Retour
+                    """)
+                    question_ordi_home = input("Entrez vos selection : ")
+                    if question_ordi_home == "1":
+                        functions.clear()
+                        functions.create_ordi()
+                        print("""
+    \033[1;32m Le PC a bien été créé ! \n 
+    \033[0m
+                        """)
+                        time.sleep(2)
+                    elif question_ordi_home == "2":
+                        break
+                    else:
+                        print("""
+    \033[1;31m Merci de selectionner un des 2 choix disponnibles ! \n 
+    \033[0m \n
+                        """)
             elif question_home_admin == "3":
                 print("3")
+            elif question_home_admin == "4":
+                print("4")
             else:
                 print("""
     \033[1;31m Merci de selectionner un des 2 choix disponnibles ! \n 
