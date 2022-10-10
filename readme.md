@@ -1,5 +1,29 @@
 # Système de gestion de l’inventaire SI
 
+## Projet
+
+Notre groupe a créé un outil de gestion pour les prêts d’ordinateurs en interne, seul les administrateurs peuvent créer et assigner des ordinateurs.
+Les utilisateurs peuvent créer des « tickets » en cas que problèmes avec l’ordinateur assigner.
+
+
+## Fonctionnalités
+
+Utilisateurs :
+- Créer des tickets
+- Voir les messages d’un ticket
+- Clôturer un ticket
+- Voir l’historique des anciens tickets
+
+Admin :
+- Première connexion en tant que « root » (mail: root, mdp: root)
+- Liste de tous les tickets
+- Répondre / Clôturer un ticket
+- Ajouter / supprimer un ordinateur
+- Supprimer un utilisateur
+- Changer le rôle d’un utilisateur
+- Assigner un ordinateur à un utilisateurs
+
+
 ## Contexte du projet
 
 Le service SI de l'entreprise CFA.co a un soucis avec son outil de gestion de l'inventaire et des tickets. Ils souhaitent que vous en développiez un en interne le temps que le soucis soit réglé.
