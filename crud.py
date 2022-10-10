@@ -232,3 +232,79 @@ def get_ordi_all():
     connexion.commit()
     connexion.close()
     return ordis
+
+def get_user_all():
+    connexion = sqlite3.connect("./BDD/bdd.db")
+    curseur = connexion.cursor()
+
+    curseur.execute("SELECT * FROM user")
+    ordis = curseur.fetchall()
+    connexion.commit()
+    connexion.close()
+    return ordis
+
+def change_role(id, role):
+    connexion = sqlite3.connect("./BDD/bdd.db")
+    curseur = connexion.cursor()
+
+    curseur.execute("UPDATE user SET role = ? WHERE id = ?", (role, id,))
+    reponse = curseur.fetchone()
+    connexion.commit()
+    connexion.close()
+    return reponse
+
+def create_assign(id_user, id_pc):
+    connexion = sqlite3.connect("./BDD/bdd.db")
+    curseur = connexion.cursor()
+
+    curseur.execute("INSERT INTO assign VALUES(?, ?, ?)", (None, id_user, id_pc,))
+    connexion.commit()
+    connexion.close()
+
+def get_user(id):
+    connexion = sqlite3.connect("./BDD/bdd.db")
+    curseur = connexion.cursor()
+
+    curseur.execute("SELECT * FROM user WHERE id = ?", (id,))
+
+    reponse = curseur.fetchone()
+    connexion.commit()
+    connexion.close()
+    return reponse
+
+def get_pc(id):
+    connexion = sqlite3.connect("./BDD/bdd.db")
+    curseur = connexion.cursor()
+
+    curseur.execute("SELECT * FROM type_ordi WHERE id = ?", (id,))
+
+    reponse = curseur.fetchone()
+    connexion.commit()
+    connexion.close()
+    return reponse
+
+def get_user_pc(id_user):
+    connexion = sqlite3.connect("./BDD/bdd.db")
+    curseur = connexion.cursor()
+
+    curseur.execute("SELECT * FROM assign WHERE id_user = ?", (id_user,))
+
+    reponse = curseur.fetchall()
+    connexion.commit()
+    connexion.close()
+    return reponse
+
+def check_assign(id_user, id_pc):
+    connexion = sqlite3.connect("./BDD/bdd.db")
+    curseur = connexion.cursor()
+
+    curseur.execute("SELECT * FROM assign WHERE id_user = ? AND id_pc = ?", (id_user, id_pc,))
+
+    reponse = curseur.fetchone()
+    connexion.commit()
+    connexion.close()
+
+    if reponse != None:
+        return True
+    else:
+        return False

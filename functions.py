@@ -131,19 +131,32 @@ def create_ticket(user_infos):
     Fonction qui demande à l'utilisateur de rentrer un ID de PC et un message, et qui fait appel a crud pour créer une nouvelle Ligne dans la DB
     : return (Str) : Retourne un print
     """
-    clear()
     date = today.strftime("%d/%m/%Y")
     id_ref_pc = input ("Entrez l'ID de l'ordinateur : ")
     message = input ("Décrivez votre problème : ")
     auteur = user_infos[2] + "_" + user_infos[3]
 
-    crud.create_ticket(date, id_ref_pc, message, auteur)
-    print("""
+    if crud.get_pc(id_ref_pc) != None:
+        if crud.check_assign(user_infos[0], id_ref_pc):
+            crud.create_ticket(date, id_ref_pc, message, auteur)
+            print("""
 
- Le Ticket a été créé !
+\033[1;32m Le Ticket a été créé !\033[0m
 
-    """)
-    time.sleep(2)
+            """)
+            time.sleep(1.5)
+        else:
+            print("""
+ \033[1;31mL'ordinateur entrer ne vous est pas assigné ! \033[0m
+            """)
+            time.sleep(1.5)
+    else:
+        print("""
+
+ \033[1;31mL'ordinateur entrer n'existe pas ! \033[0m
+
+        """)
+        time.sleep(2)
 
 def delete_ticket(id):
     """
@@ -350,7 +363,6 @@ def create_ordi():
 def afficher_liste_ordi():
     """
     Fonction qui affiche la liste des PC
-    : return grille (Tuple) : Retourne la grille
     """
     grille = []
     for ligne in get_ordi_all():
@@ -369,6 +381,75 @@ def afficher_liste_ordi():
 def get_ordi_all():
     """
     Fonction qui retourne tous les ordis existants
-    : return (Tuple) : Les tickets    
+    : return (Tuple) : Les ordis   
     """
     return crud.get_ordi_all()
+
+def afficher_liste_user():
+    """
+    Fonction qui affiche la liste des utilisateurs
+    """
+    grille = []
+    for ligne in get_user_all():
+        user = []
+        for element in ligne:
+            user.append(element)
+        grille.append(user)
+    
+    for ligne in grille:
+        ligne.pop(len(ligne) - 1)
+        if ligne[1] == 1:
+            ligne[1] = str("Admin")
+        elif ligne[1] == 0:
+            ligne[1] = str("User")
+
+    if len(grille) == 0:
+        print("Aucun Utilisateur à afficher pour le moment...")
+    else:
+        print("ID   ROLE      NOM    PRENOM    MAIL")
+        for ordis in grille:
+            print(ordis)
+
+def get_user_all():
+    """
+    Fonction qui retourne tous les user
+    : return (Tuple) : Les utilisateurs
+    """
+    return crud.get_user_all()
+
+def get_user(id):
+    if crud.get_user(id) != None:
+        return True
+    else:
+        return False
+
+def get_pc(id):
+    if crud.get_pc(id) != None:
+        return True
+    else:
+        return False
+
+def delete_user(id):
+    return crud.delete_user(id)
+    
+def change_role(id, role):
+    if role.lower() == "admin":
+        return crud.change_role(id, 1)
+    elif role.lower() == "user":
+        return crud.change_role(id, 0)
+
+def create_assign(id_user, id_pc):
+    if crud.check_assign(id_user, id_pc):
+        return False
+    else:
+        crud.create_assign(id_user, id_pc)
+        return True
+
+def afficher_liste_ordi_assign(id):
+    if crud.get_user_pc(id) != None:
+        liste_assign = crud.get_user_pc(id)
+        print("ID   MARQUE   PROC  GRAPHIQUE RAM  STOCKAGE")
+        for assign in liste_assign:
+            print(crud.get_pc(assign[2]))
+    else:
+        print("Vous n'avez aucun PC assigné pour le moment ...")

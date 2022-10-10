@@ -26,7 +26,7 @@ curseur.execute('''CREATE TABLE type_ordi
                 )
 ''')
 
-curseur.execute('''CREATE TABLE carnet_pret
+curseur.execute('''CREATE TABLE assign
                 (
                     reference_pc INTEGER PRIMARY KEY,
                     id_user INTEGER,

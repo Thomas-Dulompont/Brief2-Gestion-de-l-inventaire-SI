@@ -1,4 +1,5 @@
 import functools
+from lib2to3.pgen2.token import RPAR
 from tabnanny import check
 import time
 import functions
@@ -55,7 +56,9 @@ Veuillez vous reconnecter avec votre nouvel Admin
         time.sleep(2)
 
 if functions.check_admin(user_infos):
+    ###
     # Boucle pour le panel admin
+    ###
     while True:
         functions.clear()
         print("""
@@ -67,12 +70,15 @@ if functions.check_admin(user_infos):
 1 - Afficher tous les tickets
 2 - Gestion Ordinateurs
 3 - Gestion Utilisateurs
-4 - Historique Tickets
+4 - Assigner un Ordinateur
         """)
         question_home_admin = input("Entrez votre selection : ")
         
-        if question_home_admin == "1" or question_home_admin == "2" or question_home_admin == "3":
+        if question_home_admin == "1" or question_home_admin == "2" or question_home_admin == "3" or question_home_admin == "4":
             if question_home_admin == "1":
+                ###
+                # Boucle Afficher tous les tickets
+                ###
                 while True:
                     functions.clear()
                     print("""
@@ -89,6 +95,9 @@ if functions.check_admin(user_infos):
                         if functions.get_single_ticket_admin(choix_ticket) != None:
                             ticket = functions.get_single_ticket_admin(choix_ticket)
                             functions.clear()
+                            ###
+                            # Boucle messages tickets
+                            ###
                             while True:
                                 print("""
     Ticket n°{}
@@ -152,6 +161,9 @@ if functions.check_admin(user_infos):
                         """)
                         time.sleep(2)
             elif question_home_admin == "2":
+                ###
+                # Afficher ordinateurs
+                ###
                 while True:
                     functions.clear()
                     print("""
@@ -162,7 +174,7 @@ if functions.check_admin(user_infos):
 1 - Ajouter un PC
 2 - Retour
                     """)
-                    question_ordi_home = input("Entrez vos selection : ")
+                    question_ordi_home = input("Entrez votre selection : ")
                     if question_ordi_home == "1":
                         functions.clear()
                         functions.create_ordi()
@@ -179,18 +191,108 @@ if functions.check_admin(user_infos):
     \033[0m \n
                         """)
             elif question_home_admin == "3":
-                print("3")
+                while True:
+                    functions.clear()
+                    print("""
+    Gestion Utilisateurs
+                    """)
+                    functions.afficher_liste_user()
+                    print("""
+1 - Supprimer un utilisateur
+2 - Definir un Utilisateur Admin
+3 - Retour
+                    """)
+                    question_user_admin = input("Entrez votre selection : ")
+                    if question_user_admin == "1":
+                        functions.clear()
+                        print("""
+    Supprimer Utilisateur
+                    """)
+                        functions.afficher_liste_user()
+                        question_user_admin_delete = input("\nEntrez l'ID de l'utilisateur : ")
+                        if int(question_user_admin_delete) == user_infos[0]:
+                            functions.clear()
+                            print("""
+    \033[1;31mVous ne pouvez pas supprimer votre compte !
+    \033[0m
+                            """)
+                            time.sleep(1.5)
+                        functions.delete_user(int(question_user_admin_delete))
+                        functions.clear()
+                        print("""
+    \033[1;32m L'utilisateur à bien était supprimé ! \n 
+    \033[0m
+                        """)
+                        time.sleep(1.5)
+                    elif question_user_admin == "2":
+                        functions.clear()
+                        print("""
+    Changer rôle Utilisateur
+                    """)
+                        functions.afficher_liste_user()
+                        question_user_admin_change = input("\nEntrez l'ID de l'utilisateur : ")
+                        if int(question_user_admin_change) == user_infos[0]:
+                            functions.clear()
+                            print("""
+    \033[1;31mVous ne pouvez pas changer votre role !
+    \033[0m
+                            """)
+                            time.sleep(1.5)
+                        question_user_admin_change_role = input("\nEntrez le role de l'utilisateur (Admin / User): ")
+                        functions.change_role(question_user_admin_change, question_user_admin_change_role)
+                        functions.clear()
+                        print("""
+    \033[1;32m Le role de l'utilisateur a bien était changé ! \n 
+    \033[0m \n
+                        """)
+                        time.sleep(1.5)
+                    elif question_user_admin == "3":
+                        break
+                    else:
+                        print("""
+    \033[1;31m Merci de selectionner un des 3 choix disponnibles ! \n 
+    \033[0m \n
+                            """)
             elif question_home_admin == "4":
-                print("4")
+                while True:
+                    functions.clear()
+                    functions.afficher_liste_user()
+                    question_assign_user_admin = input("\nEntrez l'ID de l'utilisateur : ")
+                    functions.clear()
+                    functions.afficher_liste_ordi()
+                    question_assign_pc_admin = input("\nEntrez l'ID de l'ordinateur : ")
+                    if functions.get_user(int(question_assign_user_admin)):
+                        if functions.get_pc(int(question_assign_pc_admin)):
+                            id_user = int(question_assign_user_admin)
+                            id_pc = int(question_assign_pc_admin)
+                            if functions.create_assign(id_user, id_pc):
+                                functions.clear()
+                                print("""
+    \033[1;32m Le PC à bien été assigné à cet utilisateur !\033[0m
+                                """)
+                                time.sleep(1.5)
+                                break
+                        else:
+                            functions.clear()
+                            print("""
+    \033[1;31m L'ID du PC n'est pas valable ou n'existe pas !\033[0m
+                            """)
+                            time.sleep(1.5)
+                    else:
+                        functions.clear()
+                        print("""
+    \033[1;31m L'ID de l'utilisateur n'est pas valable ou n'existe pas !\033[0m
+                        """)
+                        time.sleep(1.5)
             else:
                 print("""
-    \033[1;31m Merci de selectionner un des 2 choix disponnibles ! \n 
+    \033[1;31m Merci de selectionner un des 4 choix disponnibles ! \n 
     \033[0m \n
                 """)
                 time.sleep(2)
         else:
             print("""
-    \033[1;31m Merci de selectionner un des 3 choix disponnibles ! \n 
+    \033[1;31m Merci de selectionner un des 4 choix disponnibles ! \n 
     \033[0m \n
             """)
             time.sleep(2)
@@ -296,6 +398,13 @@ Description :
                     """)
                     time.sleep(2)
             elif question_home_user == "2":
+                functions.clear()
+                print("""
+    Créer un ticket
+                
+Vos ordinateurs :""")
+                functions.afficher_liste_ordi_assign(user_infos[0])
+                print(" ")
                 functions.create_ticket(user_infos)
             elif question_home_user == "3":
                 while True:
