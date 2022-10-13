@@ -3,7 +3,7 @@
 ## Projet
 
 Notre groupe a créé un outil de gestion pour les prêts d’ordinateurs en interne, seul les administrateurs peuvent créer et assigner des ordinateurs.
-Les utilisateurs peuvent créer des « tickets » en cas que problèmes avec l’ordinateur assigner.
+Les utilisateurs peuvent créer des « tickets » en cas de problèmes avec l’ordinateur assigner.
 
 
 ## Fonctionnalités
